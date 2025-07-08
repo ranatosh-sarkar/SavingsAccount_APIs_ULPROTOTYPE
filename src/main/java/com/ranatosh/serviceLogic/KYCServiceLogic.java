@@ -15,6 +15,33 @@ public class KYCServiceLogic {
 
     @Autowired private IKYCDao  kycDao;
     @Autowired private IUserDao userDao;
+    
+    @Transactional
+    public KYCMasterTableModel captureKYCData(KYCMasterTableModel kycData) {
+        // Save to KYC master table
+        kycDao.save(kycData);
+
+        // Skip user creation if already exists
+        if (userDao.existsById(kycData.getContact())) {
+            return kycData;
+        }
+
+        // Create new User entry (basic record)
+        UserModel user = new UserModel();
+        user.setContact(kycData.getContact());
+        user.setPassword(kycData.getPassword());
+        user.setSocialid(kycData.getSocialid());
+        user.setApplicationstatus("PENDING");
+        user.setKycstatus("PENDING");
+        user.setBalance("0.0");
+        user.setFirstName("KYC");
+        user.setLastName("Applicant");
+        user.setEmail("kyc-" + kycData.getContact() + "@example.com");
+
+        userDao.save(user);
+
+        return kycData;
+    }
 
     @Transactional
     public UserModel verifyAndActivate(KYCMasterTableModel req) {
@@ -41,6 +68,7 @@ public class KYCServiceLogic {
 
         user.setApplicationstatus("ACTIVE");
         user.setKycstatus("ACTIVE");
+        user.setBalance("2000.0");
         userDao.save(user);
 
         return user;
