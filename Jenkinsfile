@@ -9,10 +9,11 @@ pipeline {
 
     stages {
         stage('Checkout') {
-            steps {
-                git url: 'https://github.com/ranatosh-sarkar/SavingsAccount_APIs_ULPROTOTYPE.git'
-            }
-        }
+    steps {
+        git branch: 'main',
+            url: 'https://github.com/ranatosh-sarkar/SavingsAccount_APIs_ULPROTOTYPE.git'
+    }
+}
 
         stage('Build JAR') {
             steps {
@@ -44,9 +45,9 @@ pipeline {
     }
 
     post {
-        always {
-            echo 'Cleaning up...'
-            bat 'docker rm -f %CONTAINER_NAME% || exit 0'
-        }
+    always {
+        echo 'Cleaning up...'
+        bat 'docker rm -f %CONTAINER_NAME% || exit 0'
     }
+}
 }
