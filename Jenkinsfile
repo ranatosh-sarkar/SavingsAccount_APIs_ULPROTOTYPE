@@ -52,7 +52,8 @@ pipeline {
 
         stage('QA Approval') {
             steps {
-            input message: 'API container is running. Proceed with Cypress tests?'
+            input message: 'API container is up and running. Cypress tests can now be executed.Do NOT proceed unless QA has verified manually.'
+
         }
 }
     }
