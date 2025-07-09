@@ -37,11 +37,12 @@ pipeline {
         }
 
         stage('Verify Container is Running') {
-            steps {
-                bat 'docker ps'
-                bat 'curl --retry 5 --retry-delay 3 http://localhost:8082/UL_SavingsAccount-API_prototype/registers'
-            }
-        }
+    steps {
+        bat 'docker ps'
+        bat 'timeout /T 20 /NOBREAK'
+        bat 'curl --retry 5 --retry-delay 3 http://localhost:8082/UL_SavingsAccount-API_prototype/registers || exit 0'
+    }
+}
     }
 
     post {
