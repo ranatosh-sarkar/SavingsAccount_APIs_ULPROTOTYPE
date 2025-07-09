@@ -4,9 +4,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ranatosh.entityModel.RegisterModel;
@@ -32,9 +32,16 @@ public class RegisterController {
     public List<RegisterModel> findAllRegisters() {
         return regService.getRegisters();
     }  
-   
-    @GetMapping("/registerByContact/{contact}")
-    public RegisterModel findRegisterByContact(@PathVariable long contact) {
+    
+    //NEW METHOD: support query parameter
+    @GetMapping(value = "/registerByContact", params = "contact")
+    public RegisterModel findRegisterByContactParam(@RequestParam long contact) {
         return regService.getRegisterByContact(contact);
     }
+   
+//    // OLD METHOD: still supports path variable
+//    @GetMapping("/registerByContact/{contact}")
+//    public RegisterModel findRegisterByContact(@PathVariable long contact) {
+//        return regService.getRegisterByContact(contact);
+//    }
 }
