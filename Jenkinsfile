@@ -49,13 +49,19 @@ pipeline {
                 bat 'docker logs %CONTAINER_NAME%'
             }
         }
+
+        stage('QA Approval') {
+            steps {
+            input message: 'API container is running. Proceed with Cypress tests?'
+        }
+}
     }
 
-    post {
-        always {
-            echo 'Cleaning up...'
-            bat 'docker rm -f %CONTAINER_NAME% || exit 0'
-        }
-    }
+    //post {
+    //    always {
+    //        echo 'Cleaning up...'
+    //        bat 'docker rm -f %CONTAINER_NAME% || exit 0'
+    //    }
+    //}
 }
 
