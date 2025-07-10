@@ -49,12 +49,25 @@ pipeline {
                 bat 'docker logs %CONTAINER_NAME%'
             }
         }
+        
+        stage('Wait for QA Sign-off') {
+            steps {
+                input message: 'Has QA completed testing and approved shutdown?', ok: 'Shutdown API Container'
+            }
+        }
+
+        stage('Cleanup API Container') {
+            steps {
+                bat 'docker rm -f %CONTAINER_NAME% || exit 0'
+            }
+        }
+        
     }
 
-    post {
-        always {
-            echo 'Cleaning up...'
-            bat 'docker rm -f %CONTAINER_NAME% || exit 0'
-        }
-    }
+    //post {
+    //    always {
+    //        echo 'Cleaning up...'
+    //        bat 'docker rm -f %CONTAINER_NAME% || exit 0'
+    //    }
+    //}
 }
