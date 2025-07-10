@@ -39,7 +39,7 @@ pipeline {
         stage('Verify Container is Running') {
             steps {
                 bat 'docker ps'
-                bat 'ping -n 31 127.0.0.1 > nul'   // ~30 seconds
+                bat 'ping -n 51 127.0.0.1 > nul'   // ~50 seconds
                 bat 'curl --retry 5 --retry-delay 3 http://localhost:8082/UL_SavingsAccount-API_prototype/registers || exit 0'
             }
         }
