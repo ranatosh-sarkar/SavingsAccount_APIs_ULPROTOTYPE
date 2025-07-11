@@ -2,14 +2,27 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "ul-savings-api"
-        DOCKER_REGISTRY = "youracrname.azurecr.io"
-        AZURE_CREDENTIALS = credentials('azure-sp') // ID from Jenkins credential store
-        RESOURCE_GROUP = "yourResourceGroup"
-        CONTAINER_NAME = "ul-savings-api-qa"
-        LOCATION = "westeurope"
-        CONTAINER_PORT = "8080"
-    }
+    IMAGE_NAME = "ul-savings-api"
+    DOCKER_REGISTRY = "ulsavingsacr.azurecr.io"
+    
+    // Azure SP credentials (Jenkins secret ID: azure-sp)
+    AZURE_CREDENTIALS = credentials('azure-sp')
+
+    // ACR login (Jenkins secrets: ACR_USERNAME, ACR_PASSWORD)
+    ACR_USERNAME = credentials('ACR_USERNAME')
+    ACR_PASSWORD = credentials('ACR_PASSWORD')
+
+    // Resource settings
+    RESOURCE_GROUP = "savings-rg"
+    CONTAINER_NAME = "ul-savings-api-qa"
+    LOCATION = "westeurope"
+    CONTAINER_PORT = "8080"
+
+    // Oracle DB (Jenkins secrets)
+    SPRING_DATASOURCE_URL = credentials('SPRING_DATASOURCE_URL')
+    SPRING_DATASOURCE_USERNAME = credentials('SPRING_DATASOURCE_USERNAME')
+    SPRING_DATASOURCE_PASSWORD = credentials('SPRING_DATASOURCE_PASSWORD')
+}
 
     stages {
         stage('Checkout') {
