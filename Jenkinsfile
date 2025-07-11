@@ -40,10 +40,10 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 sh '''
-                docker build -t $DOCKER_REGISTRY/$IMAGE_NAME:$BUILD_NUMBER .
-                echo $AZURE_CREDENTIALS_PSW | docker login $DOCKER_REGISTRY -u $AZURE_CREDENTIALS_USR --password-stdin
-                docker push $DOCKER_REGISTRY/$IMAGE_NAME:$BUILD_NUMBER
-                '''
+                    docker build -t $DOCKER_REGISTRY/$IMAGE_NAME:$BUILD_NUMBER .
+                    echo $ACR_PASSWORD | docker login $DOCKER_REGISTRY -u $ACR_USERNAME --password-stdin
+                    docker push $DOCKER_REGISTRY/$IMAGE_NAME:$BUILD_NUMBER
+                   '''
             }
         }
 
@@ -52,19 +52,19 @@ pipeline {
                 sh '''
                 az login --service-principal -u $AZURE_CREDENTIALS_USR -p $AZURE_CREDENTIALS_PSW --tenant YOUR_TENANT_ID
                 az container create \
-                  --resource-group $RESOURCE_GROUP \
+                --resource-group $RESOURCE_GROUP \
                   --name $CONTAINER_NAME \
                   --image $DOCKER_REGISTRY/$IMAGE_NAME:$BUILD_NUMBER \
                   --cpu 1 --memory 1 \
                   --registry-login-server $DOCKER_REGISTRY \
-                  --registry-username $AZURE_CREDENTIALS_USR \
-                  --registry-password $AZURE_CREDENTIALS_PSW \
+                  --registry-username $ACR_USERNAME \
+                  --registry-password $ACR_PASSWORD \
                   --dns-name-label ul-savings-api-qa-${BUILD_NUMBER} \
                   --ports $CONTAINER_PORT \
                   --environment-variables \
-                      SPRING_DATASOURCE_URL=$SPRING_DATASOURCE_URL \
-                      SPRING_DATASOURCE_USERNAME=$SPRING_DATASOURCE_USERNAME \
-                      SPRING_DATASOURCE_PASSWORD=$SPRING_DATASOURCE_PASSWORD
+                  SPRING_DATASOURCE_URL=$SPRING_DATASOURCE_URL \
+                  SPRING_DATASOURCE_USERNAME=$SPRING_DATASOURCE_USERNAME \
+                  SPRING_DATASOURCE_PASSWORD=$SPRING_DATASOURCE_PASSWORD
                 '''
             }
         }
