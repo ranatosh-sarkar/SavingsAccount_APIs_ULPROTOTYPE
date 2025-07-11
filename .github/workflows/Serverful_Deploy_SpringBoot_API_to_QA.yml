@@ -50,3 +50,10 @@ jobs:
             SPRING_DATASOURCE_URL=${{ secrets.DB_JDBC_URL }}
             SPRING_DATASOURCE_USERNAME=${{ secrets.DB_USERNAME }}
             SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }}
+
+      - name: Cleanup - Delete Azure Container Instance (temporary kill)
+        run: |
+          az container delete \
+            --name ul-savings-api-qa \
+            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --yes
