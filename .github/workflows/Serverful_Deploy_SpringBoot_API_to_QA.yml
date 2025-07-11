@@ -1,0 +1,52 @@
+name: Serverful_Deploy_SpringBoot_API_to_QA
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📦 Checkout code
+        uses: actions/checkout@v3
+
+      - name: ⚙️ Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+
+      - name: 🛠️ Build the JAR (without tests)
+        run: mvn clean package -DskipTests
+
+      - name: 🔐 Docker Login
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: 🐳 Build & Push Docker image to Docker Hub
+        run: |
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/ul-savings-api:${{ github.sha }} .
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/ul-savings-api:${{ github.sha }}
+
+      - name: 🔑 Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: 🚀 Deploy Spring Boot API to Azure Container Instance (QA)
+        uses: Azure/aci-deploy@v1
+        with:
+          resource-group: ${{ secrets.AZURE_RESOURCE_GROUP }}
+          name: ul-savings-api-qa
+          dns-name-label: ul-savings-api-qa-${{ github.run_number }}
+          image: ${{ secrets.DOCKERHUB_USERNAME }}/ul-savings-api:${{ github.sha }}
+          location: westeurope
+          ports: 8080
+          registry-username: ${{ secrets.DOCKERHUB_USERNAME }}
+          registry-password: ${{ secrets.DOCKERHUB_TOKEN }}
+          environment-variables: |
+            SPRING_DATASOURCE_URL=${{ secrets.DB_JDBC_URL }}
+            SPRING_DATASOURCE_USERNAME=${{ secrets.DB_USERNAME }}
+            SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }}
