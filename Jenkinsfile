@@ -50,7 +50,7 @@ pipeline {
         stage('Deploy to Azure ACI (QA)') {
             steps {
                 sh '''
-                az login --service-principal -u $AZURE_CREDENTIALS_USR -p $AZURE_CREDENTIALS_PSW --tenant YOUR_TENANT_ID
+                az login --service-principal -u $AZURE_CREDENTIALS_USR -p $AZURE_CREDENTIALS_PSW --tenant 0084b924-3ab4-4116-9251-9939f695e54c
                 az container create \
                 --resource-group $RESOURCE_GROUP \
                   --name $CONTAINER_NAME \
