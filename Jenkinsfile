@@ -63,7 +63,7 @@ pipeline {
 
     post {
         success {
-            echo "✅ QA container running. Waiting for manual sign-off."
+            echo "✅ QA container is Shut Down."
         }
         failure {
             echo "❌ Deployment failed."
