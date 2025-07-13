@@ -37,7 +37,7 @@ pipeline {
 
         stage('Verify API is Running') {
             steps {
-                bat 'ping -n 45 127.0.0.1 > nul'
+                bat 'ping -n 51 127.0.0.1 > nul'
                 bat 'curl --retry 5 --retry-delay 3 http://localhost:%PORT%/UL_SavingsAccount-API_prototype/registers || exit 1'
             }
         }
