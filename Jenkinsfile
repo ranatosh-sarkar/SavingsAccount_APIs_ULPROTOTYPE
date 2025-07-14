@@ -46,6 +46,7 @@ pipeline {
         stage('Dump API Logs') {
             steps {
                 bat 'docker logs %CONTAINER_NAME%'
+                bat 'docker logs %IMAGE_NAME%'
             }
         }
         
@@ -57,13 +58,14 @@ pipeline {
         stage('Cleanup API Container') {
             steps {
                 bat 'docker rm -f %CONTAINER_NAME% || exit 0'
+                bat 'docker rmi -f %IMAGE_NAME% || exit 0'
             }
         }
     }
 
     post {
         success {
-            echo "✅ QA container is Shut Down."
+            echo "✅ Killed Container and Image"
         }
         failure {
             echo "❌ Deployment failed."
