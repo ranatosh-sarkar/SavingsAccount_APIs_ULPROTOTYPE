@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: savings-api-service-uat
+  name: savings-api-service-uat  #UAT service name
 spec:
   selector:
-    app: savings-api-uat
+    app: savings-api-uat         #matches UAT deployment label
   ports:
     - protocol: TCP
       port: 80
       targetPort: 8082
-      nodePort: 31683  #Fixed port for UAT
+      nodePort: 31683            #fixed port for UAT
   type: NodePort
