@@ -4,9 +4,10 @@ metadata:
   name: savings-api-service-uat
 spec:
   selector:
-    app: savings-api-qa
+    app: savings-api-uat
   ports:
     - protocol: TCP
       port: 80
       targetPort: 8082
+      nodePort: 31683  #Fixed port for UAT
   type: NodePort
