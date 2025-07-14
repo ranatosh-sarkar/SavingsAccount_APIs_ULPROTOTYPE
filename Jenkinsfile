@@ -43,12 +43,13 @@ pipeline {
             }
         }
 
-        stage('Dump API Logs') {
-            steps {
-                bat 'docker logs %CONTAINER_NAME%'
-                bat 'docker logs %IMAGE_NAME%'
-            }
-        }
+stage('Dump UAT Logs') {
+    steps {
+        echo "Image being used: ${IMAGE_NAME}"
+        echo "Container running: ${CONTAINER_NAME}"
+        bat 'docker logs %CONTAINER_NAME% || echo "No logs available from container."'
+    }
+}
         
         stage('Wait for QA Sign-off') {
             steps {
@@ -65,10 +66,10 @@ pipeline {
 
     post {
         success {
-            echo "✅ Killed Container and Image"
+            echo "Killed Container and Image"
         }
         failure {
-            echo "❌ Deployment failed."
+            echo "Deployment failed."
         }
     }
 }
