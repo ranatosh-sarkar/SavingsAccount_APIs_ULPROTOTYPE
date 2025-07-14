@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: savings-api-deployment-qa
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: savings-api-qa
+  template:
+    metadata:
+      labels:
+        app: savings-api-qa
+    spec:
+      containers:
+        - name: savings-api
+          image: savings-api-image-qa
+          ports:
+            - containerPort: 8082
+          imagePullPolicy: IfNotPresent
