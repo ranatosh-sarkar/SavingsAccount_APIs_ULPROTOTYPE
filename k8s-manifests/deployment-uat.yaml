@@ -6,15 +6,15 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: savings-api-qa
+      app: savings-api-uat
   template:
     metadata:
       labels:
-        app: savings-api-qa
+        app: savings-api-uat
     spec:
       containers:
         - name: savings-api
-          image: savings-api-image-qa
+          image: savings-api-image-uat
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8082
-          imagePullPolicy: IfNotPresent
