@@ -24,7 +24,7 @@ public class RegisterServiceLogic {
   
     @Transactional
     public RegisterModel saveRegister(RegisterModel reg) {
-
+    // public RegisterModel saveRegister(RegisterModel reg) {
         RegisterModel saved = iRegisterDao.save(reg);
 
         UserModel user = new UserModel();
